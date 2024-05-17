@@ -28,7 +28,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author',function (req, res) {
     var author = req.params.author;
     var matchList = [];
-    
+
     for(const key in Object.keys(books))
     {
         if(books[key])
@@ -46,8 +46,22 @@ public_users.get('/author/:author',function (req, res) {
 
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    var title = req.params.title;
+    var matchList = [];
+    
+    for(const key in Object.keys(books))
+    {
+        if(books[key])
+        {
+            if(books[key].title === title)
+                matchList.push(books[key]);
+        }
+    }
+
+    if(matchList.length > 0)
+        res.send("Book for Title:" + JSON.stringify(matchList, null, 4));
+    else
+        res.send ("No book found for title: " + title);
 });
 
 //  Get book review
