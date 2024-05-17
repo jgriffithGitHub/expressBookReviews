@@ -5,6 +5,17 @@ const regd_users = express.Router();
 
 let users = [];
 
+const doesExist = (username)=>{
+    if(!users || users.length == 0)
+        return false;
+
+    let userList = users.filter((username)=>{
+      return users.username === username
+    });
+
+    return (userList.length <= 0);
+}
+
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
 }
@@ -26,5 +37,6 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
 });
 
 module.exports.authenticated = regd_users;
+module.exports.doesExist = doesExist;
 module.exports.isValid = isValid;
 module.exports.users = users;

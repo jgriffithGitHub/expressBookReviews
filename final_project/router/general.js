@@ -1,14 +1,30 @@
 const express = require('express');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
+let doesExist = require("./auth_users.js").doesExist;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
 
+
 public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
-});
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (!username && !password)
+        return res.status(404).json({message: "Error logging in: username and password are missing"});
+    if (!username)
+        return res.status(404).json({message: "Error logging in: username is missing"});
+    if (!password)
+        return res.status(404).json({message: "Error logging in: password is missing"});
+
+    if (doesExist(username))
+        return res.status(200).json({message: "Preiously registered"});
+
+    users.push({"username":username,"password":password});
+    res.send("User " + username + " has been added!")   
+
+  });
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
