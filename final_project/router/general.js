@@ -12,16 +12,16 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  res.send("Book List: " + JSON.stringify(books, null, 4));
+  res.send("\"books\": " + JSON.stringify(books, null, 4));
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  var isbn = req.params.isbn;
-  if(books[isbn])
-    res.send("Book: " + JSON.stringify(books[isbn], null, 4))
-  else
-    res.send("No book found for ISBN: " + isbn);
+    var isbn = req.params.isbn;
+    if(books[isbn])
+        res.send("\"isbn\": " + JSON.stringify(books[isbn], null, 4))
+
+    return res.status(500).json({message: "ISBN: " + isbn + " not found"}); 
  });
   
 // Get book details based on author
@@ -39,9 +39,9 @@ public_users.get('/author/:author',function (req, res) {
     }
 
     if(matchList.length > 0)
-        res.send("Title for Author:" + JSON.stringify(matchList, null, 4));
-    else
-        res.send ("No book found for author: " + author);  
+        res.send("\"author\":" + JSON.stringify(matchList, null, 4));
+
+    return res.status(500).json({message: "Author: " + author + " not found"}); 
 });
 
 // Get all books based on title
@@ -59,15 +59,18 @@ public_users.get('/title/:title',function (req, res) {
     }
 
     if(matchList.length > 0)
-        res.send("Book for Title:" + JSON.stringify(matchList, null, 4));
-    else
-        res.send ("No book found for title: " + title);
+        res.send("\"titles\":" + JSON.stringify(matchList, null, 4));
+
+    return res.status(500).json({message: "Title: " + title + " not found"}); 
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    var isbn = req.params.isbn;
+    if(books[isbn])
+      res.send("review:" + JSON.stringify(books[isbn].reviews, null, 4))
+    else
+      res.send("No book found for ISBN: " + isbn);
 });
 
 module.exports.general = public_users;
