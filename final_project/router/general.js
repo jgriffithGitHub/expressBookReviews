@@ -1,11 +1,10 @@
 const express = require('express');
+const axios = require('axios').default;
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let doesExist = require("./auth_users.js").doesExist;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
-
 
 public_users.post("/register", (req,res) => {
     const username = req.body.username;
@@ -89,4 +88,16 @@ public_users.get('/review/:isbn',function (req, res) {
       res.send("No book found for ISBN: " + isbn);
 });
 
+// Tasks 10 through 13 are here
+const task10 = ()=>{ //returns book list
+    var url = "https://jeffgriffith-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/";
+    axios.get(url).then(function(res) {
+        console.log(res);
+    }).catch(function(err) {
+        console.log(err)
+    })
+};
+
 module.exports.general = public_users;
+module.exports.task10 = task10;
+
