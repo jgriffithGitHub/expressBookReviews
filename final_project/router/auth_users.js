@@ -84,6 +84,28 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     return res.status(200).json({message: "Review added:" + JSON.stringify(books[isbn])}); 
 });
 
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    var isbn = req.params.isbn;
+    if(!books[isbn])
+        return res.status(404).json({message: "Invalid ISBN"});
+
+    var user = req.session.authorization['username'];
+
+    if(Object.keys(books[isbn].reviews).length == 0)
+    {
+        books[isbn].reviews = reviews;
+        return res.status(404).json({message: "No reviews to delete"}); 
+    } 
+    
+    // Get the existing list of reviews
+    var reviews = books[isbn].reviews;
+
+    let newReviews = reviews.filter(review => review.username !== user);
+    books[isbn].reviews = newReviews;
+    return res.status(200).json({message: "Review deleted:" + JSON.stringify(books[isbn])}); 
+ });
+
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
