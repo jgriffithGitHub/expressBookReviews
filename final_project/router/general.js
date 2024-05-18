@@ -18,11 +18,11 @@ public_users.post("/register", (req,res) => {
     if (!password)
         return res.status(404).json({message: "Error logging in: password is missing"});
 
-    if (doesExist(username))
-        return res.status(200).json({message: "Preiously registered"});
+    if (isValid(username))
+        return res.status(200).json({message: "Username: " + username + " previously registered"});
 
-    users.push({"username":username,"password":password});
-    res.send("User " + username + " has been added!")   
+        users.push({"username":username,"password":password});
+    res.send("User " + username + " has been added! ")   
 
   });
 
