@@ -93,13 +93,18 @@ const axiosBase = axios.create({
     baseURL: "https://jeffgriffith-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/"
   });
 
-// Tasks 10 and 11uses promises
-const task10 = ()=>{ //returns book list
-     axiosBase.get().then(function(res) {
+const task10 = async ()=>{ //returns book list
+    try
+    {
+        const res = await axiosBase.get();
         console.log(res.data);
-    }).catch(function(err) {
-        console.log(err)
-    })
+    }
+    catch(error)
+    {
+        if(error.response){
+            console.log('Author -- Status: ' + error.response.status + ' ' + error.response.statusText + ' -- Message:' + JSON.stringify(error.response.data));
+        }       
+    }
 };
 
 const task11 = async (isbn)=>{ //returns book list
@@ -139,10 +144,8 @@ const task13 = async (title)=>{ //returns book list
     }
 };
 
-
 module.exports.general = public_users;
 module.exports.task10 = task10;
 module.exports.task11 = task11;
 module.exports.task12 = task12;
 module.exports.task13 = task13;
-
