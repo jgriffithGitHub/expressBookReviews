@@ -93,7 +93,7 @@ const axiosBase = axios.create({
     baseURL: "https://jeffgriffith-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/"
   });
 
-// Task 10 uses promises
+// Tasks 10 and 11uses promises
 const task10 = ()=>{ //returns book list
      axiosBase.get().then(function(res) {
         console.log(res.data);
@@ -102,29 +102,41 @@ const task10 = ()=>{ //returns book list
     })
 };
 
-// Task 11 uses async/await  
 const task11 = async (isbn)=>{ //returns book list
-    await axiosBase.get('isbn/' + isbn).then(function(res) {
+    axiosBase.get('isbn/' + isbn).then(function(res) {
         console.log(res.data);
     }).catch(function(err) {
         console.log(err)
     })
 };
 
+// Tasks 12 and 13 uses async/await  
 const task12 = async (author)=>{ //returns book list
-    await axiosBase.get('author/' + author).then(function(res) {
+    try
+    {
+        const res = await axiosBase.get('author/' + author);
         console.log(res.data);
-    }).catch(function(err) {
-        console.log(err)
-    })
+    }
+    catch(error)
+    {
+        if(error.response){
+            console.log('Author -- Status: ' + error.response.status + ' ' + error.response.statusText + ' -- Message:' + JSON.stringify(error.response.data));
+        }       
+    }
 };
 
 const task13 = async (title)=>{ //returns book list
-    await axiosBase.get('title/' + title).then(function(res) {
+    try
+    {
+        const res = await axiosBase.get('title/' + title);
         console.log(res.data);
-    }).catch(function(err) {
-        console.log(err)
-    })
+    }
+    catch(error)
+    {
+        if(error.response){
+            console.log('Author -- Status: ' + error.response.status + ' ' + error.response.statusText + ' -- Message:' + JSON.stringify(error.response.data));
+        }       
+    }
 };
 
 
