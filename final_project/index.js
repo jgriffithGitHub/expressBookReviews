@@ -1,9 +1,12 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const session = require('express-session')
+const session = require('express-session');
 const customer_routes = require('./router/auth_users.js').authenticated;
 const genl_routes = require('./router/general.js').general;
 const task10 = require('./router/general.js').task10;
+const task11 = require('./router/general.js').task11;
+const task12 = require('./router/general.js').task12;
+const task13 = require('./router/general.js').task13;
 
 const app = express();
 
@@ -34,6 +37,7 @@ app.use("/customer", customer_routes);
 app.use("/", genl_routes);
 
 app.listen(PORT,()=>console.log("Server is running"));
-
-
 task10();
+task11(1);
+task12("Samuel Beckett");
+task13("Njál's Saga");

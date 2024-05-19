@@ -33,10 +33,10 @@ public_users.get('/',function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
     var isbn = req.params.isbn;
-    if(books[isbn])
-        res.send("\"isbn\": " + JSON.stringify(books[isbn], null, 4))
+    if(!books[isbn])
+        return res.status(500).json({message: "ISBN: " + isbn + " not found"}); 
 
-    return res.status(500).json({message: "ISBN: " + isbn + " not found"}); 
+    res.send("\"isbn\": " + JSON.stringify(books[isbn], null, 4));
  });
   
 // Get book details based on author
@@ -44,7 +44,7 @@ public_users.get('/author/:author',function (req, res) {
     var author = req.params.author;
     var matchList = [];
 
-    for(const key in Object.keys(books))
+    for(const key of Object.keys(books))
     {
         if(books[key])
         {
@@ -53,10 +53,10 @@ public_users.get('/author/:author',function (req, res) {
         }
     }
 
-    if(matchList.length > 0)
-        res.send("\"author\":" + JSON.stringify(matchList, null, 4));
+    if(matchList.length <= 0)
+        return res.status(500).json({message: "Author: " + author + " not found"}); 
 
-    return res.status(500).json({message: "Author: " + author + " not found"}); 
+    res.send("\"author\":" + JSON.stringify(matchList, null, 4));
 });
 
 // Get all books based on title
@@ -73,31 +73,64 @@ public_users.get('/title/:title',function (req, res) {
         }
     }
 
-    if(matchList.length > 0)
-        res.send("\"titles\":" + JSON.stringify(matchList, null, 4));
-
-    return res.status(500).json({message: "Title: " + title + " not found"}); 
+    if(matchList.length <= 0)
+        return res.status(500).json({message: "Title: " + title + " not found"}); 
+    
+    res.send("\"titles\":" + JSON.stringify(matchList, null, 4));
 });
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
     var isbn = req.params.isbn;
-    if(books[isbn])
-      res.send("review:" + JSON.stringify(books[isbn].reviews, null, 4))
-    else
-      res.send("No book found for ISBN: " + isbn);
+    if(!books[isbn])
+        return res.status(500).json({message: "No book found for ISBN: " + isbn}); 
+
+    res.send("review:" + JSON.stringify(books[isbn].reviews, null, 4))
 });
 
 // Tasks 10 through 13 are here
+const axiosBase = axios.create({
+    baseURL: "https://jeffgriffith-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/"
+  });
+
+// Task 10 uses promises
 const task10 = ()=>{ //returns book list
-    var url = "https://jeffgriffith-5000.theianext-1-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/";
-    axios.get(url).then(function(res) {
-        console.log(res);
+     axiosBase.get().then(function(res) {
+        console.log(res.data);
     }).catch(function(err) {
         console.log(err)
     })
 };
 
+// Task 11 uses async/await  
+const task11 = async (isbn)=>{ //returns book list
+    await axiosBase.get('isbn/' + isbn).then(function(res) {
+        console.log(res.data);
+    }).catch(function(err) {
+        console.log(err)
+    })
+};
+
+const task12 = async (author)=>{ //returns book list
+    await axiosBase.get('author/' + author).then(function(res) {
+        console.log(res.data);
+    }).catch(function(err) {
+        console.log(err)
+    })
+};
+
+const task13 = async (title)=>{ //returns book list
+    await axiosBase.get('title/' + title).then(function(res) {
+        console.log(res.data);
+    }).catch(function(err) {
+        console.log(err)
+    })
+};
+
+
 module.exports.general = public_users;
 module.exports.task10 = task10;
+module.exports.task11 = task11;
+module.exports.task12 = task12;
+module.exports.task13 = task13;
 
